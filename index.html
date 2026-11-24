@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GG SMC @ Catella Family — XAUUSD Institutional Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-void: #05060a;
+      --bg-card: rgba(14, 18, 28, 0.72);
+      --border-glass: rgba(255, 255, 255, 0.09);
+      --emerald: #089981;
+      --emerald-glow: rgba(8, 153, 129, 0.35);
+      --crimson: #f23645;
+      --gold: #f5b942;
+      --gold-glow: rgba(245, 185, 66, 0.25);
+      --text-main: #f3f5f9;
+      --text-muted: #8b95a7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background-color: var(--bg-void);
+      color: var(--text-main);
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ================= WEB3 BACKGROUND ================= */
+    .web3-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(8, 153, 129, 0.16), transparent 42%),
+        radial-gradient(circle at 82% 18%, rgba(245, 185, 66, 0.14), transparent 40%),
+        radial-gradient(circle at 50% 88%, rgba(242, 54, 69, 0.12), transparent 45%),
+        #05060a;
+    }
+
+    .web3-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+    }
+
+    /* ================= LOGO BADGE ================= */
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-emblem {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(245, 185, 66, 0.2), rgba(8, 153, 129, 0.2));
+      border: 1px solid rgba(245, 185, 66, 0.45);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 24px var(--gold-glow);
+      flex-shrink: 0;
+    }
+
+    .logo-text-wrap {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .logo-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      background: linear-gradient(90deg, #ffffff, #f5b942);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-sub {
+      font-size: 0.72rem;
+      color: var(--emerald);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ================= HOME / LANDING VIEW ================= */
+    #home-view {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px clamp(18px, 5vw, 56px);
+    }
+
+    .home-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(14px);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.6; }
+    }
+
+    .hero {
+      max-width: 1080px;
+      margin: 40px auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(245, 185, 66, 0.1);
+      border: 1px solid rgba(245, 185, 66, 0.32);
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.1rem, 5.4vw, 4rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      max-width: 860px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(95deg, #f5b942 0%, #089981 55%, #5eead4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: clamp(0.95rem, 1.8vw, 1.12rem);
+      max-width: 680px;
+      line-height: 1.65;
+    }
+
+    .cta-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .btn-primary {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      padding: 15px 30px;
+      border-radius: 14px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #04100d;
+      background: linear-gradient(135deg, #f5b942, #18d4a7);
+      box-shadow: 0 10px 35px rgba(8, 153, 129, 0.35), 0 0 25px rgba(245, 185, 66, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 42px rgba(8, 153, 129, 0.5), 0 0 30px rgba(245, 185, 66, 0.35);
+    }
+
+    .btn-ghost {
+      appearance: none;
+      cursor: pointer;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(14px);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(245, 185, 66, 0.5);
+      background: rgba(25, 32, 48, 0.85);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 1040px;
+      margin-top: 24px;
+    }
+
+    .glass-card {
+      text-align: left;
+      padding: 20px;
+      border-radius: 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(16px);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(8, 153, 129, 0.45);
+    }
+
+    .card-kicker {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .home-footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* ================= PLATFORM CHART VIEW ================= */
+    #platform-view {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: #0a0c12;
+      flex-direction: column;
+    }
+
+    #platform-view.active {
+      display: flex;
+    }
+
+    .platform-header {
+      height: 54px;
+      padding: 0 14px;
+      background: rgba(11, 14, 22, 0.96);
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pair-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background: rgba(245, 185, 66, 0.12);
+      border: 1px solid rgba(245, 185, 66, 0.3);
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .mini-btn {
+      appearance: none;
+      cursor: pointer;
+      padding: 7px 12px;
+      border-radius: 9px;
+      border: 1px solid var(--border-glass);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .mini-btn:hover {
+      border-color: rgba(8, 153, 129, 0.6);
+      background: rgba(8, 153, 129, 0.14);
+    }
+
+    .mini-btn.accent {
+      border-color: rgba(245, 185, 66, 0.45);
+      color: var(--gold);
+    }
+
+    .chart-workspace {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      display: flex;
+    }
+
+    #tv-chart-container {
+      flex: 1;
+      height: 100%;
+      width: 100%;
+    }
+
+    /* ================= SKELETON LOADING ================= */
+    #chart-skeleton {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      background: #080a0f;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+
+    #chart-skeleton.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .sk-top {
+      height: 44px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+    }
+
+    .sk-body {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    .sk-left-tools {
+      width: 52px;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .sk-canvas {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .sk-candles {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      height: 52%;
+      opacity: 0.45;
+    }
+
+    .sk-candle {
+      width: 12px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #161b26 25%, #232b3d 50%, #161b26 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+
+    .sk-price-axis {
+      width: 68px;
+      border-left: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 16px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sk-box {
+      border-radius: 6px;
+      background: linear-gradient(90deg, #131722 25%, #1e2536 50%, #131722 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+
+    .sk-overlay-badge {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 26px;
+      border-radius: 16px;
+      background: rgba(11, 14, 22, 0.88);
+      border: 1px solid rgba(245, 185, 66, 0.35);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+
+    .sk-spinner {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 3px solid rgba(245, 185, 66, 0.2);
+      border-top-color: var(--gold);
+      border-right-color: var(--emerald);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ================= CATELLA STRATEGY HUD DRAWER ================= */
+    #hud-drawer {
+      width: 300px;
+      background: rgba(11, 14, 22, 0.98);
+      border-left: 1px solid var(--border-glass);
+      padding: 16px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    #hud-drawer.open {
+      display: flex;
+    }
+
+    .hud-section {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .hud-section h4 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.86rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .hud-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #d0d7e3;
+      margin-bottom: 7px;
+      cursor: pointer;
+    }
+
+    .hud-check input {
+      accent-color: var(--emerald);
+      margin-top: 2px;
+    }
+
+    /* ================= MODAL ================= */
+    #info-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    #info-modal.open {
+      display: flex;
+    }
+
+    .modal-box {
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      border-radius: 20px;
+      background: #0d111a;
+      border: 1px solid rgba(245, 185, 66, 0.35);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-box h3 {
+      font-family: "Space Grotesk", sans-serif;
+      margin-bottom: 10px;
+      color: var(--gold);
+    }
+
+    .modal-box p, .modal-box li {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .modal-box ol {
+      padding-left: 18px;
+      margin: 10px 0 18px;
+    }
+
+    @media (max-width: 768px) {
+      .hide-mobile { display: none; }
+      #hud-drawer {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 30;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="web3-bg">
+    <div class="web3-grid"></div>
+  </div>
+
+  <!-- ================= WEB3 HOME PAGE ================= -->
+  <main id="home-view">
+    <header class="home-nav">
+      <a href="#" class="brand-logo">
+        <div class="logo-emblem" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M6 16V8M6 5V7M6 17V19" stroke="#f23645" stroke-width="2" stroke-linecap="round"/>
+            <rect x="4" y="8" width="4" height="7" rx="1" fill="#f23645"/>
+            <path d="M12 18V6M12 3V5M12 19V21" stroke="#f5b942" stroke-width="2" stroke-linecap="round"/>
+            <rect x="10" y="7" width="4" height="9" rx="1" fill="#f5b942"/>
+            <path d="M18 15V7M18 4V6M18 16V18" stroke="#089981" stroke-width="2" stroke-linecap="round"/>
+            <rect x="16" y="7" width="4" height="6" rx="1" fill="#089981"/>
+          </svg>
+        </div>
+        <div class="logo-text-wrap">
+          <span class="logo-title">GG SMC</span>
+          <span class="logo-sub">@ Catella Family</span>
+        </div>
+      </a>
+
+      <div class="status-pill">
+        <span class="pulse-dot"></span>
+        <span>XAUUSD Live Feed • Closed-Source Protected</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-tag">Institutional Gold Terminal • Trinity M35 &amp; M36</div>
+      <h1>Precision <span>XAUUSD Smart Money</span> Charting Portal</h1>
+      <p>
+        Built exclusively for <strong>GG SMC @ Catella Family</strong>. Launch the full TradingView
+        XAUUSD chart with every original drawing tool, Fibonacci Discount zones, and our live
+        Trinity M35 &amp; M36 execution checklist—with zero indicator source code exposed.
+      </p>
+
+      <div class="cta-row">
+        <button class="btn-primary" onclick="enterPlatform()">
+          <span>Enter Platform Chart</span>
+          <span>→</span>
+        </button>
+        <button class="btn-ghost" onclick="toggleModal(true)">
+          How GG SMC Script Works (Invite-Only)
+        </button>
+      </div>
+
+      <div class="cards-grid">
+        <div class="glass-card">
+          <div class="card-kicker">Default Asset</div>
+          <div class="card-title">OANDA:XAUUSD (M5)</div>
+          <div class="card-desc">Opens directly on Gold vs US Dollar M5 with full multi-timeframe switching and real-time market structure.</div>
+        </div>
+        <div class="glass-card">
+          <div class="card-kicker">Full Toolkit</div>
+          <div class="card-title">Original TradingView Tools</div>
+          <div class="card-desc">Horizontal rays, FVG boxes, Fibonacci retracements, long/short tools, and built-in indicators enabled.</div>
+        </div>
+        <div class="glass-card">
+          <div class="card-kicker">IP Protection</div>
+          <div class="card-title">Zero Source Code Exposure</div>
+          <div class="card-desc">Your GG SMC Pine Script stays private on TradingView Invite-Only—never leaked in GitHub or browser files.</div>
+        </div>
+        <div class="glass-card">
+          <div class="card-kicker">Catella HUD</div>
+          <div class="card-title">Trinity M35 &amp; M36 Guide</div>
+          <div class="card-desc">Built-in side checklist for M3/M5/M15 FVG alignment, Scalp Sniper timing, SFP 2-FVG, and CHoCH validation.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="home-footer">
+      GG SMC @ Catella Family • Educational &amp; Technical Analysis Platform • Always Use Stop Loss &amp; Moderate Position Sizing
+    </footer>
+  </main>
+
+  <!-- ================= PLATFORM CHART VIEW ================= -->
+  <section id="platform-view" aria-hidden="true">
+    <header class="platform-header">
+      <div class="header-left">
+        <div class="brand-logo">
+          <div class="logo-emblem" style="width:32px;height:32px;border-radius:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="8" width="4" height="7" rx="1" fill="#f23645"/>
+              <rect x="10" y="6" width="4" height="10" rx="1" fill="#f5b942"/>
+              <rect x="16" y="7" width="4" height="7" rx="1" fill="#089981"/>
+            </svg>
+          </div>
+          <div class="logo-text-wrap">
+            <span class="logo-title" style="font-size:0.9rem;">GG SMC</span>
+            <span class="logo-sub" style="font-size:0.64rem;">@ Catella Family</span>
+          </div>
+        </div>
+        <span class="pair-chip hide-mobile">XAUUSD • M5</span>
+      </div>
+
+      <div class="header-right">
+        <button class="mini-btn accent" onclick="toggleHud()">
+          <span>M35 / M36 Checklist</span>
+        </button>
+        <button class="mini-btn" onclick="exitPlatform()">
+          <span>← Home</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="chart-workspace">
+      <!-- Skeleton Loading Screen -->
+      <div id="chart-skeleton">
+        <div class="sk-top">
+          <div class="sk-box" style="width:90px;height:20px;"></div>
+          <div class="sk-box" style="width:50px;height:20px;"></div>
+          <div class="sk-box" style="width:110px;height:20px;"></div>
+          <div class="sk-box" style="width:70px;height:20px;margin-left:auto;"></div>
+        </div>
+        <div class="sk-body">
+          <div class="sk-left-tools">
+            <div class="sk-box" style="width:26px;height:26px;"></div>
+            <div class="sk-box" style="width:26px;height:26px;"></div>
+            <div class="sk-box" style="width:26px;height:26px;"></div>
+            <div class="sk-box" style="width:26px;height:26px;"></div>
+            <div class="sk-box" style="width:26px;height:26px;"></div>
+            <div class="sk-box" style="width:26px;height:26px;"></div>
+          </div>
+          <div class="sk-canvas">
+            <div class="sk-candles">
+              <div class="sk-candle" style="height:40%;"></div>
+              <div class="sk-candle" style="height:65%;"></div>
+              <div class="sk-candle" style="height:50%;"></div>
+              <div class="sk-candle" style="height:82%;"></div>
+              <div class="sk-candle" style="height:60%;"></div>
+              <div class="sk-candle" style="height:90%;"></div>
+              <div class="sk-candle" style="height:72%;"></div>
+              <div class="sk-candle" style="height:95%;"></div>
+              <div class="sk-candle" style="height:58%;"></div>
+              <div class="sk-candle" style="height:78%;"></div>
+              <div class="sk-candle" style="height:86%;"></div>
+            </div>
+            <div class="sk-overlay-badge">
+              <div class="sk-spinner"></div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.95rem;">
+                GG SMC @ Catella Family
+              </div>
+              <div style="font-size:0.78rem;color:var(--text-muted);">
+                Loading XAUUSD TradingView Engine &amp; Drawing Suite...
+              </div>
+            </div>
+          </div>
+          <div class="sk-price-axis hide-mobile">
+            <div class="sk-box" style="width:46px;height:14px;"></div>
+            <div class="sk-box" style="width:46px;height:14px;"></div>
+            <div class="sk-box" style="width:46px;height:14px;"></div>
+            <div class="sk-box" style="width:46px;height:14px;"></div>
+            <div class="sk-box" style="width:46px;height:14px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TradingView Chart Container -->
+      <div id="tv-chart-container"></div>
+
+      <!-- Optional Side Checklist HUD -->
+      <aside id="hud-drawer">
+        <div class="hud-section">
+          <h4>Trinity M35 (FVG Filter)</h4>
+          <label class="hud-check"><input type="checkbox"/> Mark FVG on M5 (Ray / Line / Box)</label>
+          <label class="hud-check"><input type="checkbox"/> Check M3 inside FVG</label>
+          <label class="hud-check"><input type="checkbox"/> Sync M15 inside FVG</label>
+          <label class="hud-check"><input type="checkbox"/> Scalp Sniper entry timing</label>
+        </div>
+        <div class="hud-section">
+          <h4>M36 Concept (SFP + CHoCH)</h4>
+          <label class="hud-check"><input type="checkbox"/> Valid CHoCH: HL formed before new HH (Uptrend)</label>
+          <label class="hud-check"><input type="checkbox"/> SFP 2 FVG = Valid | 1 FVG = Moderate (Reduce Lot)</label>
+          <label class="hud-check"><input type="checkbox"/> Fibo Discount Price Zone aligned</label>
+        </div>
+        <div class="hud-section">
+          <h4>Catella Risk Rule</h4>
+          <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;">
+            Never enter full margin. Always place a Stop Loss (SL) and use moderate position sizing.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= INVITE-ONLY INFO MODAL ================= -->
+  <div id="info-modal" onclick="if(event.target===this) toggleModal(false)">
+    <div class="modal-box">
+      <h3>GG SMC Closed-Source Protection</h3>
+      <p>
+        TradingView’s embedded website widget does not allow custom Pine Script execution directly inside external webpages—which also keeps your proprietary script safe from browser inspection.
+      </p>
+      <ol>
+        <li>Publish your <strong>GG SMC v6</strong> Pine Script on <strong>TradingView.com</strong> as an <strong>Invite-Only</strong> script so Catella Family members never see the code.</li>
+        <li>Use this Netlify terminal for live <strong>XAUUSD</strong> analysis with all original TradingView drawing tools (Box, Ray, Fibo) and the built-in <strong>M35 / M36 Checklist</strong>.</li>
+      </ol>
+      <button class="btn-primary" style="width:100%;justify-content:center;" onclick="toggleModal(false)">
+        Got It
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let chartLoaded = false;
+
+    function enterPlatform() {
+      const home = document.getElementById("home-view");
+      const platform = document.getElementById("platform-view");
+      const skeleton = document.getElementById("chart-skeleton");
+
+      home.style.display = "none";
+      platform.classList.add("active");
+      platform.setAttribute("aria-hidden", "false");
+
+      if (!chartLoaded) {
+        skeleton.classList.remove("hidden");
+        loadTradingViewChart();
+        chartLoaded = true;
+      }
+    }
+
+    function exitPlatform() {
+      const home = document.getElementById("home-view");
+      const platform = document.getElementById("platform-view");
+
+      platform.classList.remove("active");
+      platform.setAttribute("aria-hidden", "true");
+      home.style.display = "flex";
+    }
+
+    function toggleHud() {
+      document.getElementById("hud-drawer").classList.toggle("open");
+    }
+
+    function toggleModal(show) {
+      document.getElementById("info-modal").classList.toggle("open", show);
+    }
+
+    function hideSkeleton() {
+      document.getElementById("chart-skeleton").classList.add("hidden");
+    }
+
+    function loadTradingViewChart() {
+      const container = document.getElementById("tv-chart-container");
+      container.innerHTML = "";
+
+      const widgetWrap = document.createElement("div");
+      widgetWrap.className = "tradingview-widget-container";
+      widgetWrap.style.width = "100%";
+      widgetWrap.style.height = "100%";
+
+      const innerWidget = document.createElement("div");
+      innerWidget.className = "tradingview-widget-container__widget";
+      innerWidget.style.width = "100%";
+      innerWidget.style.height = "100%";
+
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+      script.async = true;
+      script.text = JSON.stringify({
+        autosize: true,
+        symbol: "OANDA:XAUUSD",
+        interval: "5",
+        timezone: "Asia/Kuala_Lumpur",
+        theme: "dark",
+        style: "1",
+        locale: "en",
+        backgroundColor: "rgba(10, 12, 18, 1)",
+        gridColor: "rgba(255, 255, 255, 0.04)",
+        hide_top_toolbar: false,
+        hide_side_toolbar: false,
+        allow_symbol_change: true,
+        save_image: true,
+        calendar: false,
+        support_host: "https://www.tradingview.com"
+      });
+
+      // Watch for the TradingView iframe and fade out skeleton when ready
+      const observer = new MutationObserver(() => {
+        const iframe = widgetWrap.querySelector("iframe");
+        if (iframe) {
+          iframe.addEventListener("load", () => {
+            setTimeout(hideSkeleton, 350);
+          });
+          observer.disconnect();
+        }
+      });
+      observer.observe(widgetWrap, { childList: true, subtree: true });
+
+      // Safety fallback so skeleton never gets stuck
+      setTimeout(hideSkeleton, 2800);
+
+      widgetWrap.appendChild(innerWidget);
+      widgetWrap.appendChild(script);
+      container.appendChild(widgetWrap);
+    }
+  </script>
+</body>
+</html>
